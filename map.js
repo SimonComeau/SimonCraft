@@ -5,10 +5,6 @@ const LETTER_A = 65;
 const LETTER_Z = 90;
 const LETTER_UNDEFINED = 0;
 
-exports.symbol = DEFAULT_MAP_SYMBOL;
-exports.size = DEFAULT_MAP_SIZE;
-exports.display = displayMap;
-
 function generateRows() {
     var mapRow = '';
     var headerRow = '  ';
@@ -43,3 +39,11 @@ function displayMap() {
         return ++currentIndex;
     }
 }
+
+exports.symbol = DEFAULT_MAP_SYMBOL;
+exports.size = DEFAULT_MAP_SIZE;
+exports.DefaultFirstIndex = LETTER_A;
+exports.generateRows = generateRows;
+exports.getNextRowIndex = displayMap.getNextRowIndex;
+exports.display = displayMap;
+generateRows();
