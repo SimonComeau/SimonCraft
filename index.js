@@ -1,6 +1,9 @@
 var map = require('./map');
 
-map.symbol = 'x';
-map.size = 15;
-map.display();
+map.symbol = '.';
+map.size = 10;
+var mapRows = map.generate();
 
+mapRows.forEach(row => {
+    console.log('%s%s', row['index'], row['data']);
+});

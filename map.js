@@ -2,48 +2,55 @@ const DEFAULT_MAP_SIZE = 10;
 const DEFAULT_MAP_SYMBOL = '.';
 const MAX_MAP_SIZE = 100;
 const LETTER_A = 65;
-const LETTER_Z = 90;
-const LETTER_UNDEFINED = 0;
+const ALPHABET_SIZE = 26;
+const util = require('util');
 
-function generateRows() {
-    var mapRow = '';
-    var headerRow = '  ';
+function generateRowData(row) {
+    row['data'] = '';
     for (var counter = 1; counter <= Math.min(exports.size, MAX_MAP_SIZE); counter++) {
-        headerRow += (counter > 10 ? ' ' : '  ') + counter;
-        mapRow += '  ' + exports.symbol;
+        row['data'] += '  ' + exports.symbol;
     }
-    console.log(headerRow);
-    return mapRow;
 }
 
-function displayMap() {
-    var rowTemplate = generateRows();
-    var rowLimit = Math.min(exports.size, MAX_MAP_SIZE) + LETTER_A;
-    var indexLetter = LETTER_UNDEFINED;
-
-    for (var counter = LETTER_A; counter < rowLimit; counter = getNextRowIndex(counter)) {
-        var index = (indexLetter == LETTER_UNDEFINED ? ' ' : String.fromCharCode(indexLetter));
-        console.log(index + String.fromCharCode(counter) + rowTemplate + '\n');
+function generateHeaderRow() {
+    var headerRow = '';
+    for (var counter = 1; counter <= Math.min(exports.size, MAX_MAP_SIZE); counter++) {
+        headerRow += (counter > DEFAULT_MAP_SIZE ? ' ' : '  ') + counter;
     }
+    return headerRow;
+}
 
-    function getNextRowIndex(currentIndex) {
-        if (currentIndex == LETTER_Z) {
-            rowLimit -= 26;
-            if (indexLetter == LETTER_UNDEFINED) {
-                indexLetter = LETTER_A;
-            } else {
-                indexLetter++;
-            }
-            return LETTER_A;
-        }
-        return ++currentIndex;
+function generateRowIndex(row) {
+    if (row['number'] < ALPHABET_SIZE) {
+        row['index'] = util.format(' %s', String.fromCharCode(LETTER_A + row['number']));
+    } else {
+        var base = row['number'] % ALPHABET_SIZE;
+        var firstIndex = String.fromCharCode(LETTER_A + (base - 1));
+        var secondBase = row['number'] - (base * ALPHABET_SIZE);
+        var secondIndex = String.fromCharCode(LETTER_A + secondBase);
+        row['index'] = util.format('%s %s', firstIndex, secondIndex);
     }
+}
+function generateMap() {
+    var rows = [];
+    rows.length = Math.min(exports.size, MAX_MAP_SIZE) + 1;
+    rows[0] = [];
+    rows[0]['index'] = '  ';
+    rows[0]['data'] = generateHeaderRow();
+
+    for (var counter = 1; counter < rows.length; counter++) {
+        rows[counter] = [];
+        rows[counter]['number'] = counter - 1;
+        generateRowIndex(rows[counter]);
+        generateRowData(rows[counter]);
+    }
+    return rows;
 }
 
 exports.symbol = DEFAULT_MAP_SYMBOL;
 exports.size = DEFAULT_MAP_SIZE;
-exports.DefaultFirstIndex = LETTER_A;
-exports.generateRows = generateRows;
-exports.getNextRowIndex = displayMap.getNextRowIndex;
-exports.display = displayMap;
-generateRows();
+exports.generate = generateMap;
+//test exports
+exports.generateRowData = generateRowData;
+exports.generateHeaderRow = generateHeaderRow;
+exports.generateRowIndex = generateRowIndex;

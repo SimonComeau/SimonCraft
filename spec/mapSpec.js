@@ -1,16 +1,18 @@
 describe('We expect the map', () => {
-    it('to have a display function', () => {
+    var map = undefined;
+    beforeEach(function () {
+        map = require('../map');
+    });
+    it('to have a generate function', () => {
         //arrange
-        var map = require('../map');
 
         //act
 
         //assert
-        expect(map.display).toBeDefined();
+        expect(map.generate).toBeDefined();
     });
-    it('display to have a default value of 10 rows', () => {
+    it('generate to have a default value of 10 rows', () => {
         //arrange
-        var map = require('../map');
 
         //act
 
@@ -19,7 +21,6 @@ describe('We expect the map', () => {
     });
     it('to have a default character of .', () => {
         //arrange
-        var map = require('../map');
 
         //act
 
@@ -29,12 +30,15 @@ describe('We expect the map', () => {
     });
     it('should display a row with 10 dots by default', () => {
         //arrange
-        var map = require('../map');
         var expected = '  .  .  .  .  .  .  .  .  .  .';
+
         //act
-        var defaultFirstIndex = map.getNextRowIndex;
+        var result = map.generateRowData();
 
         //assert
-        expect(defaultFirstIndex).toBe(expected);
+        expect(result).toBe(expected);
+    });
+    afterEach(function () {
+        map = undefined;
     });
 });
